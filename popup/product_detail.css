@@ -1,0 +1,29 @@
+.have-content-body {
+  width: 598px;
+  height: 409px;
+  overflow: hidden;
+}
+
+.no-content-body {
+  width: 256px;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.popup-content {
+  overflow: hidden;
+}
+
+.hidden {
+  display: none;
+}
+
+.visible {
+  display: block;
+}
+
+.text-center {
+  text-align: center;
+}
