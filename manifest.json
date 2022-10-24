@@ -7,6 +7,11 @@
   "icons": {
     "48": "icons/app-48.png"
   },
+  "permissions": [
+    "*://shopee.vn/*",
+    "*://tiki.vn/*",
+    "*://lazada.vn/*"
+  ],
   "host_permissions": [
     "*://shopee.vn/*",
     "*://tiki.vn/*",
