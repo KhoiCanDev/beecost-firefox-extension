@@ -1,0 +1,28 @@
+name: Build Extension
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Zipping resources
+      uses: montudor/action-zip@v1
+      with:
+        args: zip -qq -r addon.zip icons popup manifest.json
+
+    - name: Publish extension
+      uses: trmcnvn/firefox-addon@v1
+      with:
+        uuid: '{358bea92-053f-4e1d-8397-02ba42e20c41}'
+        xpi: addon.zip
+        manifest: manifest.json
+        api-key: ${{ secrets.FIREFOX_API_KEY }}
+        api-secret: ${{ secrets.FIREFOX_API_SECRET }}
