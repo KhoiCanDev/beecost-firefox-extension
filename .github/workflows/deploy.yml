@@ -17,11 +17,11 @@ jobs:
     - name: Zipping resources
       uses: montudor/action-zip@v1
       with:
-        args: zip -qq -r addon.zip icons popup manifest.json
+        args: zip -qq -r addon.zip icons popup manifest.json background.js
     - name: Archive build result
       uses: actions/upload-artifact@v3
       with:
-        name: built file
+        name: addon-package
         path: addon.zip
     - name: Publish extension
       uses: trmcnvn/firefox-addon@v1
