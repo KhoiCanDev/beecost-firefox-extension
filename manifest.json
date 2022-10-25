@@ -8,11 +8,6 @@
     "48": "icons/app-48.png"
   },
   "permissions": ["*://shopee.vn/*", "*://tiki.vn/*", "*://www.lazada.vn/*"],
-  "host_permissions": [
-    "*://shopee.vn/*",
-    "*://tiki.vn/*",
-    "*://www.lazada.vn/*"
-  ],
   "browser_action": {
     "default_icon": "icons/app-48.png",
     "theme_icons": [
