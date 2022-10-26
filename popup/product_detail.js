@@ -16,8 +16,8 @@ function loadCurrentTab(tabs) {
 function loadProductPage(productJson) {
   const product = JSON.parse(productJson);
   if (product.status === 'error') {
-    console.log(productJson);
     setAsUnsupportedPage();
+    setAsUnsupportedProductPage();
     return;
   }
 
@@ -48,6 +48,10 @@ function setAsUnsupportedPage() {
   document.body.classList.add('no-content-body');
   document.getElementById('not-supported-page').classList.remove('hidden');
   document.getElementById('not-supported-page').classList.add('visible');
+}
+
+function setAsUnsupportedProductPage() {
+  document.getElementById('not-supported-page').getElementsByTagName("p")[0].innerHTML = "Not supported product";
 }
 
 browser.tabs
