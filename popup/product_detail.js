@@ -2,19 +2,18 @@ function loadCurrentTab(tabs) {
   const productUrl = tabs[0].url;
   if (productUrl) {
     const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${productUrl}`;
-    fetch(`https://api.allorigins.win/get?url=${encodeURIComponent(urlSrc)}`)
+    fetch(`https://corsproxy.io/?${encodeURIComponent(urlSrc)}`)
       .then((response) => {
         if (response.ok) return response.json();
         throw new Error('Network response was not ok.');
       })
-      .then((data) => loadProductPage(data.contents));
+      .then((data) => loadProductPage(data));
   } else {
     setAsUnsupportedPage();
   }
 }
 
-function loadProductPage(productJson) {
-  const product = JSON.parse(productJson);
+function loadProductPage(product) {
   if (product.status === 'error') {
     setAsUnsupportedPage();
     setAsUnsupportedProductPage();
