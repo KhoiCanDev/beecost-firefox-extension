@@ -20,9 +20,9 @@ const loadProductPage = async (product) => {
     return;
   }
 
-  document.body.classList.add('have-content-body');
   const productId = product.data.product_base.product_base_id;
   const productPrice = product.data.product_base.price;
+	const productName = product.data.product_base.name;
 
   const priceHistoryApi = `https://apiv3.beecost.vn/product/history_price?product_base_id=${productId}&price_current=${productPrice}`;
   const priceHistoryResponse = await fetch(getCorsFreeUrl(priceHistoryApi));
@@ -31,12 +31,12 @@ const loadProductPage = async (product) => {
   const historyData = priceHistoryJson.data.product_history_data.item_history;
   const prices = historyData.price;
   const timestamps = historyData.price_ts;
-
-  console.log('prices timestamps', prices, timestamps);
   
   document.getElementById('loading-page').classList.add('hidden');
-  
-  const chartElement = document.getElementById('iframe-container');
+	document.getElementById('product-name').innerText = productName;
+
+	document.getElementById('content-page').classList.remove('hidden');
+  const chartElement = document.getElementById('chart-container');
   createChart(prices, timestamps, productPrice, chartElement);
 }
 
@@ -60,10 +60,7 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
     data.push(dataPoint);
   }
 
-  console.log('data', data);
-
   var chart = LightweightCharts.createChart(chartElement, {
-		width:600, 
     height: 400,
 		layout: {
 			textColor: '#d1d4dc',
@@ -130,7 +127,7 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 		lineWidth: lineWidth,
 		lineStyle: LightweightCharts.LineStyle.Dotted,
 		axisLabelVisible: true,
-		title: 'minimum price',
+		title: 'thấp nhất',
 	};
 	var currentPriceLine = {
 		price: currentPrice,
@@ -138,7 +135,7 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 		lineWidth: lineWidth,
 		lineStyle: LightweightCharts.LineStyle.Dotted,
 		axisLabelVisible: true,
-		title: 'current price',
+		title: 'hiện tại',
 	};
 	var maxPriceLine = {
 		price: maximumPrice,
@@ -146,8 +143,12 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 		lineWidth: lineWidth,
 		lineStyle: LightweightCharts.LineStyle.Dotted,
 		axisLabelVisible: true,
-		title: 'maximum price',
+		title: 'cao nhất',
 	}
+	const numberFormatter = Intl.NumberFormat('vi-VN');
+	document.getElementById('lowest-price').innerText = "₫" + numberFormatter.format(minimumPrice);
+	document.getElementById('current-price').innerText = "₫" + numberFormatter.format(currentPrice);
+	document.getElementById('highest-price').innerText = "₫" + numberFormatter.format(maximumPrice);
 
 	series.createPriceLine(minPriceLine);
 	series.createPriceLine(currentPriceLine);
@@ -162,7 +163,6 @@ function onError(error) {
 
 function setAsUnsupportedPage() {
   document.getElementById('loading-page').classList.add('hidden');
-  document.body.classList.add('no-content-body');
   document.getElementById('not-supported-page').classList.remove('hidden');
   document.getElementById('not-supported-page').classList.add('visible');
 }

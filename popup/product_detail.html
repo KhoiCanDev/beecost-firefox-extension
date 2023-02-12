@@ -1,20 +1,44 @@
 <!DOCTYPE html>
 
 <html>
-  <head>
-    <meta charset="utf-8">
-    <link rel="stylesheet" href="product_detail.css"/>
-  </head>
 
-<body>
-  <div class="text-center" id="loading-page">
-    <p>Loading ...</p>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="tailwind.js"></script>
+  <link rel="stylesheet" href="product_detail.css" />
+</head>
+
+<body class="bg-gray-500 overflow-hidden">
+  <div class="bg-white shadow-md rounded-lg max-w-lg text-center" id="loading-page">
+    <p class="p-4">Loading ...</p>
   </div>
-  <div class="popup-content" id="iframe-container">
-    
+  <div class="bg-white shadow-md rounded-lg max-w-lg m-2 hidden" id="content-page">
+    <div class="px-5 py-5">
+      <p class="text-gray-900 font-semibold text-xl truncate" id="product-name">
+
+      </p>
+      <div class="pt-5 flex items-center justify-between">
+        <div class="flex flex-col">
+          <div class="text-3xl font-bold text-cyan-500" id="lowest-price"></div>
+          <div class="text-sm text-cyan-800">Thấp nhất</div>
+        </div>
+        <div class="flex flex-col">
+          <div class="text-3xl font-bold text-yellow-500" id="current-price"></div>
+          <div class="text-sm text-yellow-800">Hiện tại</div>
+        </div>
+        <div class="flex flex-col">
+          <div class="text-3xl font-bold text-purple-500" id="highest-price"></div>
+          <div class="text-sm text-purple-800">Cao nhất</div>
+        </div>
+      </div>
+      <div class="w-full min-w-96 pt-5" id="chart-container">
+
+      </div>
+    </div>
   </div>
-  <div class="text-center hidden" id="not-supported-page">
-    <p>Not supported page</p>
+  <div class="bg-white shadow-md rounded-lg max-w-lg text-center hidden" id="not-supported-page">
+    <p class="p-4">Not supported page</p>
   </div>
   <script type="text/javascript" src="lightweight-charts.js"></script>
   <script type="text/javascript" src="product_detail.js"></script>
