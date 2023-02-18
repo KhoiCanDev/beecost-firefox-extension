@@ -4,8 +4,12 @@ function loadCurrentTab(tabs) {
     const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${productUrl}`;
     fetch(getCorsFreeUrl(urlSrc))
       .then((response) => {
-        if (response.ok) return response.json();
-        throw new Error('Network response was not ok.');
+        if (response.ok) {
+					return response.json();
+				} else {
+					setAsUnsupportedPage();
+					setAsUnsupportedProductPage();
+				}
       })
       .then((data) => loadProductPage(data));
   } else {
@@ -142,7 +146,7 @@ function setAsUnsupportedPage() {
 }
 
 function setAsUnsupportedProductPage() {
-  document.getElementById('not-supported-page').getElementsByTagName("p")[0].innerHTML = "Not supported product";
+  document.getElementById('not-supported-page').getElementsByTagName("p")[0].innerHTML = "Không có dữ liệu cho sản phẩm này";
 }
 
 function getCorsFreeUrl(url) {
