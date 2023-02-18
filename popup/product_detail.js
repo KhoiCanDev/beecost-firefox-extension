@@ -36,7 +36,7 @@ const loadProductPage = async (product) => {
 	document.getElementById('product-name').innerText = productName;
 
 	document.getElementById('content-page').classList.remove('hidden');
-  const chartElement = document.getElementById('chart-container');
+  const chartElement = document.getElementById('chart-element');
   createChart(prices, timestamps, productPrice, chartElement);
 }
 
@@ -61,17 +61,8 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
   }
 
   var chart = LightweightCharts.createChart(chartElement, {
-    height: 400,
-		layout: {
-			textColor: '#d1d4dc',
-			backgroundColor: '#000000',
-		},
-		rightPriceScale: {
-			scaleMargins: {
-				top: 0.3,
-				bottom: 0.25,
-			},
-		},
+    height: 384,
+    width: 456,
 		crosshair: {
 			vertLine: {
 				width: 4,
@@ -83,28 +74,20 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 				labelVisible: true,
 			},
 		},
-		grid: {
-			vertLines: {
-				color: 'rgba(42, 46, 57, 0)',
-			},
-			horzLines: {
-				color: 'rgba(42, 46, 57, 0)',
-			},
-		},
 		handleScroll: {
 			vertTouchDrag: false,
 		},
     localization: {
+      locale: 'vi-VN',
       priceFormatter: myPriceFormatter,
     },
 	});
   
 	var series = chart.addLineSeries({
-		color: 'rgb(0, 120, 255)',
 		lineWidth: 2,
-		crosshairMarkerVisible: false,
-		lastValueVisible: false,
-		priceLineVisible: false,
+		crosshairMarkerVisible: true,
+		lastValueVisible: true,
+		priceLineVisible: true,
 	});
   series.setData(data);
 
@@ -129,14 +112,6 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 		axisLabelVisible: true,
 		title: 'thấp nhất',
 	};
-	var currentPriceLine = {
-		price: currentPrice,
-		color: '#be1238',
-		lineWidth: lineWidth,
-		lineStyle: LightweightCharts.LineStyle.Dotted,
-		axisLabelVisible: true,
-		title: 'hiện tại',
-	};
 	var maxPriceLine = {
 		price: maximumPrice,
 		color: '#be1238',
@@ -151,7 +126,6 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 	document.getElementById('highest-price').innerText = "₫" + numberFormatter.format(maximumPrice);
 
 	series.createPriceLine(minPriceLine);
-	series.createPriceLine(currentPriceLine);
 	series.createPriceLine(maxPriceLine);
 
 	chart.timeScale().fitContent();
