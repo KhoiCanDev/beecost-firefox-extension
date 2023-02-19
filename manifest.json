@@ -2,7 +2,7 @@
   "description": "An unofficial BeeCost extension for Firefox",
   "manifest_version": 3,
   "name": "BeeCost (Unofficial)",
-  "version": "2.5",
+  "version": "3.0.0",
   "homepage_url": "https://github.com/KhoiCanDev/beecost-firefox-extension",
   "icons": {
     "48": "icons/app-48.png"
@@ -23,5 +23,11 @@
   },
   "background": {
     "scripts": ["background.js"]
-  }
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "{2620d5bd-14ce-4997-8604-07a2446352c0}",
+      "strict_min_version": "109.*"
+    }
+  }  
 }
