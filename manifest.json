@@ -1,14 +1,15 @@
 {
   "description": "An unofficial BeeCost extension for Firefox",
-  "manifest_version": 2,
+  "manifest_version": 3,
   "name": "BeeCost (Unofficial)",
-  "version": "2.4",
+  "version": "2.5",
   "homepage_url": "https://github.com/KhoiCanDev/beecost-firefox-extension",
   "icons": {
     "48": "icons/app-48.png"
   },
-  "permissions": ["*://shopee.vn/*", "*://tiki.vn/*", "*://www.lazada.vn/*"],
-  "browser_action": {
+  "host_permissions": ["*://shopee.vn/*", "*://tiki.vn/*", "*://www.lazada.vn/*"],
+  "action": {
+    "browser_style": true,
     "default_icon": "icons/app-48.png",
     "theme_icons": [
       {

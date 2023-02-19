@@ -66,7 +66,7 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 
   var chart = LightweightCharts.createChart(chartElement, {
     height: 384,
-    width: 456,
+    width: 350,
 		crosshair: {
 			vertLine: {
 				width: 4,
