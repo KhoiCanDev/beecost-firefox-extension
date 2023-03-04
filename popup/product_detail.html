@@ -5,15 +5,44 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="tailwind.min.css" />
-  <link rel="stylesheet" href="product_detail.css" />
+  <link rel="stylesheet" href="libs/tailwind.min.css" />
+  <style>
+    .loading-spin-animation {
+      animation: spin 4s infinite linear;
+    }
+
+    @keyframes spin {
+      from {
+        transform: rotate(0deg);
+      }
+
+      to {
+        transform: rotate(360deg);
+      }
+    }
+  </style>
 </head>
 
 <body>
-  <div class="bg-white shadow-md rounded-lg max-w-lg text-center" id="loading-page">
-    <p class="p-4">Đang tải dữ liệu...</p>
+  <div class="bg-white shadow-md rounded-lg max-w-lg w-64 h-80" id="loading-page">
+    <div class="flex flex-col items-center justify-center w-full h-full">
+      <div>
+        <i class="loading-spin-animation text-black h-32 w-32" data-feather="loader"></i>
+      </div>
+      <p class="p-4 font-sans text-lg text-center">Đang tải dữ liệu...</p>
+    </div>
   </div>
-  <div class="bg-white shadow-md rounded-lg max-w-lg hidden w-108" id="content-page">
+
+  <div class="bg-white shadow-md rounded-lg max-w-lg w-64 h-80 hidden" id="not-supported-page">
+    <div class="flex flex-col items-center justify-center w-full h-full">
+      <div>
+        <i class="text-black h-32 w-32" data-feather="frown"></i>
+      </div>
+      <p class="p-4 font-sans text-lg text-center" id="not-supported-text">Không hỗ trợ trang này</p>
+    </div>
+  </div>
+
+  <div class="bg-white shadow-md rounded-lg hidden w-132" id="content-page">
     <div class="px-5 py-5">
       <p class="text-gray-900 font-semibold text-xl truncate" id="product-name">
 
@@ -32,18 +61,19 @@
           <div class="text-sm text-purple-800 text-opacity-40">Cao nhất</div>
         </div>
       </div>
-      <div class="h-92 flex justify-center content-center mt-5 border-2 rounded-md border-gray-900" id="chart-container">
+      <div class="h-92 flex justify-center content-center mt-5 border-2 rounded-md border-gray-900"
+           id="chart-container">
         <div class="w-92" id="chart-element"></div>
       </div>
       <div class="flex justify-end mt-5">
-        <div class="text-xs">Powered by <a class="text-yellow-600 cursor-pointer" href="https://beecost.vn/" target="_blank">BeeCost</a></div>
+        <div class="text-xs">Powered by <a class="text-yellow-600 cursor-pointer" href="https://beecost.vn/"
+             target="_blank">BeeCost</a></div>
       </div>
     </div>
   </div>
-  <div class="bg-white shadow-md rounded-lg max-w-lg text-center hidden" id="not-supported-page">
-    <p class="p-4">Không hỗ trợ trang này</p>
-  </div>
-  <script type="text/javascript" src="lightweight-charts.js"></script>
+
+  <script type="text/javascript" src="libs/lightweight-charts.js"></script>
+  <script type="text/javascript" src="libs/feather.min.js"></script>
   <script type="text/javascript" src="product_detail.js"></script>
 </body>
 
