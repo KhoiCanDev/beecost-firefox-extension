@@ -4,7 +4,12 @@ This add-on display a popup on user click to display price history data on suppo
 
 This extension act as a wrapper of BeeCost site. All data is provided by BeeCost itself.
 
-Supported sites:
+## Supported sites
 - shopee.vn
 - tiki.vn
 - lazada.vn
+
+## Planned features
+- Tabbed interface: history, wishlist, settings
+- Dark/light theme following system
+- Wishlist
