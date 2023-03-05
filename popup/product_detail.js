@@ -1,7 +1,22 @@
+const allowed_hosts = [
+	"shopee.vn",
+	"tiki.vn",
+	"www.lazada.vn"
+];
+
 function loadCurrentTab(tabs) {
 	feather.replace();
   const productUrl = tabs[0].url;
-  if (productUrl) {
+
+	let allowQuery = false;
+	for (const allowed_host of allowed_hosts) {
+		if (productUrl && productUrl.includes(allowed_host)) {
+			allowQuery = true;
+			break;
+		}
+	}
+
+  if (productUrl && allowQuery) {
     const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${productUrl}`;
     fetch(getCorsFreeUrl(urlSrc))
       .then((response) => {

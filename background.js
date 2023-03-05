@@ -1,18 +1,29 @@
-function updateActiveTab(tabs) {
+function updateActiveTab() {
   function updateTab(tabs) {
+    browser.action.setIcon({ path: 'icons/app-48-grayscale.png' });
+    browser.action.setBadgeText({ text: '' });
     const activeTab = tabs[0];
-    browser.action.setIcon({ path: 'icons/app-48.png' });
-    if (activeTab.url) {
-      if (activeTab.url.startsWith('https://shopee.vn/')) {
+    if (activeTab && activeTab.url) {
+      const activeTabUrl = activeTab.url;
+      if (
+        activeTabUrl.startsWith('https://shopee.vn/') ||
+        activeTabUrl.startsWith('https://tiki.vn/') ||
+        activeTabUrl.startsWith('https://www.lazada.vn/')
+      ) {
+        browser.action.setIcon({ path: 'icons/app-48.png' });
+      }
+
+      if (activeTabUrl.startsWith('https://shopee.vn/')) {
         browser.action.setBadgeText({ text: 'SP' });
-      } else if (activeTab.url.startsWith('https://tiki.vn/')) {
+      }
+
+      if (activeTabUrl.startsWith('https://tiki.vn/')) {
         browser.action.setBadgeText({ text: 'TK' });
-      } else if (activeTab.url.startsWith('https://www.lazada.vn/')) {
+      }
+
+      if (activeTabUrl.startsWith('https://www.lazada.vn/')) {
         browser.action.setBadgeText({ text: 'LZ' });
       }
-    } else {
-      browser.action.setIcon({ path: 'icons/app-48-grayscale.png' });
-      browser.action.setBadgeText({ text: '' });
     }
   }
 
