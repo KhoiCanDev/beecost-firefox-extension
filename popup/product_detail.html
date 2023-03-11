@@ -5,7 +5,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="libs/tailwind.min.css" />
+  <link rel="stylesheet" href="product_detail.css" />
   <style>
     .loading-spin-animation {
       animation: spin 4s infinite linear;
@@ -28,41 +28,41 @@
 </head>
 
 <body>
-  <div class="bg-white shadow-md rounded-lg max-w-lg w-64 h-80" id="loading-page">
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg max-w-lg w-64 h-80" id="loading-page">
     <div class="flex flex-col items-center justify-center w-full h-full">
       <div>
-        <i class="loading-spin-animation text-black h-32 w-32" data-feather="loader"></i>
+        <i class="loading-spin-animation text-black dark:text-white h-32 w-32" data-feather="loader"></i>
       </div>
-      <p class="p-4 font-sans text-lg text-center">Đang tải dữ liệu...</p>
+      <p class="p-4 font-sans text-lg text-black dark:text-white text-center">Đang tải dữ liệu...</p>
     </div>
   </div>
 
-  <div class="bg-white shadow-md rounded-lg max-w-lg w-64 h-80 hidden" id="not-supported-page">
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg max-w-lg w-64 h-80 hidden" id="not-supported-page">
     <div class="flex flex-col items-center justify-center w-full h-full">
       <div>
-        <i class="text-black h-32 w-32" data-feather="frown"></i>
+        <i class="text-black dark:text-white h-32 w-32" data-feather="frown"></i>
       </div>
-      <p class="p-4 font-sans text-lg text-center" id="not-supported-text">Không hỗ trợ trang này</p>
+      <p class="p-4 font-sans text-lg text-black dark:text-white text-center" id="not-supported-text">Không hỗ trợ trang này</p>
     </div>
   </div>
 
-  <div class="bg-white shadow-md rounded-lg hidden w-content" id="content-page">
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg hidden w-content" id="content-page">
     <div class="px-5 py-5">
-      <p class="text-gray-900 font-semibold text-xl truncate" id="product-name">
+      <p class="text-gray-900 dark:text-white font-semibold text-xl truncate" id="product-name">
 
       </p>
       <div class="pt-5 flex items-center justify-between gap-2">
         <div class="flex flex-col">
-          <div class="text-3xl font-bold text-blue-500" id="lowest-price"></div>
-          <div class="text-sm text-blue-800 text-opacity-40">Thấp nhất</div>
+          <div class="text-3xl font-bold text-blue-500 dark:text-blue-200" id="lowest-price"></div>
+          <div class="text-sm text-blue-800 dark:text-blue-200 dark:text-opacity-80 text-opacity-40">Thấp nhất</div>
         </div>
         <div class="flex flex-col">
-          <div class="text-3xl font-bold text-yellow-500" id="current-price"></div>
-          <div class="text-sm text-yellow-800 text-opacity-40">Hiện tại</div>
+          <div class="text-3xl font-bold text-yellow-500 dark:text-yellow-200" id="current-price"></div>
+          <div class="text-sm text-yellow-800 dark:text-yellow-200 dark:text-opacity-80 text-opacity-40">Hiện tại</div>
         </div>
         <div class="flex flex-col">
-          <div class="text-3xl font-bold text-purple-500" id="highest-price"></div>
-          <div class="text-sm text-purple-800 text-opacity-40">Cao nhất</div>
+          <div class="text-3xl font-bold text-purple-500 dark:text-purple-200" id="highest-price"></div>
+          <div class="text-sm text-purple-800 dark:text-purple-200 dark:text-opacity-80 text-opacity-40">Cao nhất</div>
         </div>
       </div>
       <div class="flex justify-center content-center mt-5 border-2 rounded-md border-gray-900"
@@ -70,7 +70,7 @@
         <div class="w-full h-96" id="chart-element"></div>
       </div>
       <div class="flex justify-end mt-5">
-        <div class="text-xs">Powered by <a class="text-yellow-600 cursor-pointer" href="https://beecost.vn/"
+        <div class="text-xs text-black dark:text-white">Powered by <a class="text-yellow-600 cursor-pointer" href="https://beecost.vn/"
              target="_blank">BeeCost</a></div>
       </div>
     </div>

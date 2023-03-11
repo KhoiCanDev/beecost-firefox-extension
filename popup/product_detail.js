@@ -80,7 +80,11 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
     data.push(dataPoint);
   }
 
-  var chart = LightweightCharts.createChart(chartElement, {
+	let chartOptions = {
+		layout: {
+			background: { color: '#FFFFFF' },
+			textColor: '#191919',
+		},
 		crosshair: {
 			vertLine: {
 				width: 4,
@@ -99,10 +103,24 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
       locale: 'vi-VN',
       priceFormatter: myPriceFormatter,
     },
-	});
+	};
+	let darkMode = false;
+	if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+		darkMode = true;
+		chartOptions = {
+			...chartOptions,
+			layout: {
+				background: { color: '#2B2B43' },
+				textColor: '#D9D9D9',
+			},
+		}
+	}
+
+  var chart = LightweightCharts.createChart(chartElement, chartOptions);
   
 	var series = chart.addLineSeries({
 		lineWidth: 2,
+		color: darkMode ? '#21E22F' : '#2196F3',
 		crosshairMarkerVisible: true,
 		lastValueVisible: true,
 		priceLineVisible: true,
