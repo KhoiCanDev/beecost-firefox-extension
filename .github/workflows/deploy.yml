@@ -13,6 +13,7 @@ jobs:
     outputs:
       manifest: ${{ steps.changes.outputs.manifest }}
     steps:
+    - uses: actions/checkout@v3
     - uses: dorny/paths-filter@v2
       id: changes
       with:
