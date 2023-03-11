@@ -7,8 +7,21 @@ on:
     branches: [ "main" ]
 
 jobs:
-
+  check-changes:
+    runs-on: ubuntu-latest
+    environment: Deployment
+    outputs:
+      manifest: ${{ steps.changes.outputs.manifest }}
+    steps:
+    - uses: dorny/paths-filter@v2
+      id: changes
+      with:
+        filters: |
+          manifest:
+            - 'manifest.json'
   build:
+    needs: check-changes
+    if: needs.check-changes.outputs.manifest == 'true'
     runs-on: ubuntu-latest
     environment: Deployment
     steps:

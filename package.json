@@ -1,0 +1,23 @@
+{
+  "name": "beecost-firefox-extension",
+  "version": "3.0.4",
+  "description": "This add-on display a popup on user click to display price history data on supported sites",
+  "main": "background.js",
+  "dependencies": {},
+  "devDependencies": {
+    "tailwindcss": "^3.2.7"
+  },
+  "scripts": {
+    "dev": "npx tailwindcss -i ./includes.css -o ./popup/product_detail.css --watch --minify"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KhoiCanDev/beecost-firefox-extension.git"
+  },
+  "author": "KhoiCanDev",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/KhoiCanDev/beecost-firefox-extension/issues"
+  },
+  "homepage": "https://github.com/KhoiCanDev/beecost-firefox-extension#readme"
+}
