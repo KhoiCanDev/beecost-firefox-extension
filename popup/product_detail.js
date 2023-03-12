@@ -85,6 +85,14 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 			background: { color: '#FFFFFF' },
 			textColor: '#191919',
 		},
+		grid: {
+			vertLines: {
+				color: 'rgba(209, 213, 219, 0.8)',
+			},
+			horzLines: {
+				color: 'rgba(209, 213, 219, 0.8)',
+			},
+		},
 		crosshair: {
 			vertLine: {
 				width: 4,
@@ -92,6 +100,9 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 				style: 0,
 			},
 			horzLine: {
+				width: 4,
+				color: 'rgba(224, 227, 235, 0.1)',
+				style: 0,
 				visible: true,
 				labelVisible: true,
 			},
@@ -113,6 +124,20 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 				background: { color: '#2B2B43' },
 				textColor: '#D9D9D9',
 			},
+			grid: {
+				vertLines: {
+					color: 'rgba(209, 213, 219, 0.1)',
+				},
+				horzLines: {
+					color: 'rgba(209, 213, 219, 0.1)',
+				},
+			},
+			timeScale: {
+				borderColor: 'rgba(209, 213, 219, 0.4)'
+			},
+			rightPriceScale: {
+				borderColor: 'rgba(209, 213, 219, 0.4)'
+			}
 		}
 	}
 
@@ -120,10 +145,10 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
   
 	var series = chart.addLineSeries({
 		lineWidth: 2,
-		color: darkMode ? '#21E22F' : '#2196F3',
+		color: darkMode ? '#21E22F' : '#17cb27',
 		crosshairMarkerVisible: true,
 		lastValueVisible: true,
-		priceLineVisible: true,
+		priceLineVisible: false,
 	});
   series.setData(data);
 
@@ -139,20 +164,20 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 		}
 	}
 
-	var lineWidth = 2;
+	var lineWidth = 1;
 	var minPriceLine = {
 		price: minimumPrice,
-		color: '#be1238',
+		color: 'rgba(59, 130, 246, 0.4)',
 		lineWidth: lineWidth,
-		lineStyle: LightweightCharts.LineStyle.Dotted,
+		lineStyle: LightweightCharts.LineStyle.Dashed,
 		axisLabelVisible: true,
 		title: 'thấp nhất',
 	};
 	var maxPriceLine = {
 		price: maximumPrice,
-		color: '#be1238',
+		color: 'rgba(168, 85, 247, 0.4)',
 		lineWidth: lineWidth,
-		lineStyle: LightweightCharts.LineStyle.Dotted,
+		lineStyle: LightweightCharts.LineStyle.Dashed,
 		axisLabelVisible: true,
 		title: 'cao nhất',
 	}
