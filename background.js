@@ -40,7 +40,7 @@ browser.tabs.onUpdated.addListener(updateActiveTab);
 // listen to tab switching
 browser.tabs.onActivated.addListener(updateActiveTab);
 
-browser.action.onClicked.addListener((tab) => {
+browser.action.onClicked.addListener((_) => {
   browser.permissions.request({
     origins: [
       "https://shopee.vn/*",
@@ -53,6 +53,16 @@ browser.action.onClicked.addListener((tab) => {
       browser.action.setPopup({
         popup: 'popup/product_detail.html',
       })
+    }
+  });
+});
+
+browser.runtime.onStartup.addListener(() => {
+  browser.permissions.getAll().then((currentPermissions) => {
+    if (currentPermissions.origins && currentPermissions.origins.length > 0) {
+      browser.action.setPopup({
+        popup: 'popup/product_detail.html',
+      });
     }
   });
 });
