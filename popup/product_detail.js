@@ -17,8 +17,8 @@ function loadCurrentTab(tabs) {
 	}
 
   if (productUrl && allowQuery) {
-    const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${productUrl}`;
-    fetch(getCorsFreeUrl(urlSrc))
+    const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${encodeURIComponent(productUrl)}`;
+    fetch(urlSrc)
       .then((response) => {
         if (response.ok) {
 					return response.json();
@@ -45,7 +45,7 @@ const loadProductPage = async (product) => {
 	const productName = product.data.product_base.name;
 
   const priceHistoryApi = `https://apiv3.beecost.vn/product/history_price?product_base_id=${productId}&price_current=${productPrice}`;
-  const priceHistoryResponse = await fetch(getCorsFreeUrl(priceHistoryApi));
+  const priceHistoryResponse = await fetch(priceHistoryApi);
   const priceHistoryJson = await priceHistoryResponse.json();
 
   const historyData = priceHistoryJson.data.product_history_data.item_history;
@@ -204,10 +204,6 @@ function setAsUnsupportedPage() {
 
 function setAsUnsupportedProductPage() {
   document.getElementById('not-supported-page').getElementsByTagName("p")[0].innerHTML = "Không có dữ liệu cho sản phẩm này";
-}
-
-function getCorsFreeUrl(url) {
-  return `https://corsproxy.io/?${encodeURIComponent(url)}`;
 }
 
 browser.tabs

@@ -39,3 +39,20 @@ browser.tabs.onUpdated.addListener(updateActiveTab);
 
 // listen to tab switching
 browser.tabs.onActivated.addListener(updateActiveTab);
+
+browser.action.onClicked.addListener((tab) => {
+  browser.permissions.request({
+    origins: [
+      "https://shopee.vn/*",
+      "https://tiki.vn/*",
+      "https://www.lazada.vn/*",
+      "https://apiv3.beecost.vn/*"
+    ]
+  }).then((result) => {
+    if (result) {
+      browser.action.setPopup({
+        popup: 'popup/product_detail.html',
+      })
+    }
+  });
+});
