@@ -9,7 +9,7 @@ This extension act as a wrapper of BeeCost site. All data is provided by BeeCost
 - tiki.vn
 - lazada.vn
 
-## Planned features
-- Tabbed interface: history, wishlist, settings
-- Dark/light theme following system
-- Wishlist
+## TODO list
+- Tabbed interface: price history, wishlist, settings
+- Wishlist feature
+- Integrate lowest, highest prices to the chart
