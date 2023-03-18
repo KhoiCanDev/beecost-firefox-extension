@@ -58,13 +58,14 @@ const loadProductPage = async (product) => {
 	document.getElementById('content-page').classList.remove('hidden');
   const chartElement = document.getElementById('chart-element');
   createChart(prices, timestamps, productPrice, chartElement);
+	const lowestPriceTableElement = document.getElementById('lowest-price-table');
+
+	var timePriceZip = timestamps.map((e, i) => [e, prices[i]]);
+	createLowestPricesTable(timePriceZip, lowestPriceTableElement);
 }
 
 const currentLocale = window.navigator.languages[0];
-const myPriceFormatter = Intl.NumberFormat(currentLocale, {
-    style: 'currency',
-    currency: 'VND',
-}).format;
+const myPriceFormatter = Intl.NumberFormat('vi-VN').format;
 
 const createChart = (prices, timestamps, currentPrice, chartElement) => {
   var data = [];
@@ -182,14 +183,87 @@ const createChart = (prices, timestamps, currentPrice, chartElement) => {
 		title: 'cao nhất',
 	}
 	const numberFormatter = Intl.NumberFormat('vi-VN');
-	document.getElementById('lowest-price').innerText = "₫" + numberFormatter.format(minimumPrice);
-	document.getElementById('current-price').innerText = "₫" + numberFormatter.format(currentPrice);
-	document.getElementById('highest-price').innerText = "₫" + numberFormatter.format(maximumPrice);
+	document.getElementById('lowest-price').innerText = numberFormatter.format(minimumPrice) + "₫";
+	document.getElementById('current-price').innerText = numberFormatter.format(currentPrice) + "₫";
+	document.getElementById('highest-price').innerText = numberFormatter.format(maximumPrice) + "₫";
 
 	series.createPriceLine(minPriceLine);
 	series.createPriceLine(maxPriceLine);
 
 	chart.timeScale().fitContent();
+}
+
+const createLowestPricesTable = (timePriceZip, tableElement) => {
+	var minimumPrice = timePriceZip[0][1];
+	var maximumPrice = minimumPrice;
+	for(var i = 1; i < timePriceZip.length; i++) {
+		var price = timePriceZip[i][1];
+		if (price > maximumPrice) {
+			maximumPrice = price;
+		}
+		if (price < minimumPrice) {
+			minimumPrice = price;
+		}
+	}
+	if (minimumPrice !== maximumPrice) {
+		const minMaxDiff = maximumPrice - minimumPrice;
+		let allowedOffset = minMaxDiff * 0.3;
+		const toPrice = minimumPrice + allowedOffset;
+	
+		const datePriceMap = new Map();
+		for(var i = 1; i < timePriceZip.length; i++) {
+			var time = timePriceZip[i][0];
+			var price = timePriceZip[i][1];
+			if (price >= minimumPrice && price <= toPrice) {
+				var date = new Date(time);
+				const day = date.getDate().toString().padStart(2, '0');
+				const month = (date.getMonth() + 1).toString().padStart(2, '0');
+				const year = date.getFullYear();
+				const key = `${day}-${month}-${year}`;
+				if (datePriceMap.has(key)) {
+					const keyPrice = datePriceMap.get(key);
+					if (price < keyPrice) {
+						datePriceMap.set(key, price);
+					}
+				} else {
+					datePriceMap.set(key, price);
+				}
+			}
+		}
+		
+		if (datePriceMap.size > 0) {
+			const numberFormatter = Intl.NumberFormat('vi-VN');
+			const reversedMap = new Map(Array.from(datePriceMap).reverse());
+			const tbodyRef = tableElement.getElementsByTagName('tbody')[0];
+			let cnt = 0;
+			for (const [date, price] of reversedMap) {
+				if (cnt == 5) {
+					break;
+				}
+				const newRow = tbodyRef.insertRow();
+				const dateCell = newRow.insertCell();
+				const dateText = document.createTextNode(date);
+				dateCell.appendChild(dateText);
+	
+				const priceCell = newRow.insertCell();
+				const priceText = document.createTextNode(numberFormatter.format(price) + "₫");
+				priceCell.appendChild(priceText);
+	
+				dateCell.className = "border border-slate-400 dark:border-slate-200 p-2";
+				priceCell.className = "border border-slate-400 dark:border-slate-200 p-2 custom-text-right";
+				
+				cnt += 1;
+			}
+		}
+	} else {
+		const tbodyRef = tableElement.getElementsByTagName('tbody')[0];
+		const newRow = tbodyRef.insertRow();
+		const newCell = newRow.insertCell();
+		newCell.colSpan = 2;
+		const newText = document.createTextNode("Không có dữ liệu");
+		newCell.appendChild(newText);
+		newCell.className = "border border-slate-400 dark:border-slate-200 p-2";
+	}
 }
 
 function onError(error) {
