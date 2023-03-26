@@ -29,8 +29,24 @@
   let lowestPrice = ""
   let currentPrice = ""
   let highestPrice = ""
-  let lowestPriceLineOptions: CreatePriceLineOptions
-  let highestPriceLineOptions: CreatePriceLineOptions
+  let lowestPriceLineOptions: CreatePriceLineOptions = {
+      price: 0,
+      color: "rgba(59, 130, 246, 0.4)",
+      lineWidth: 1,
+      lineStyle: LineStyle.Dashed,
+      axisLabelVisible: true,
+      title: "thấp nhất"
+    }
+  let highestPriceLineOptions: CreatePriceLineOptions = {
+      price: 0,
+      color: "rgba(168, 85, 247, 0.4)",
+      lineWidth: 1,
+      lineStyle: LineStyle.Dashed,
+      axisLabelVisible: true,
+      title: "cao nhất"
+    }
+  let minimumPrice = 0;
+  let maximumPrice = 0;
 
   const loadCurrentTab = (tabs) => {
     const productUrl = tabs[0].url
@@ -104,36 +120,23 @@
     }
 
     lineSeriesData = data
+    chartApi?.timeScale()?.fitContent()
 
-
-    let minimumPrice = data[0].value
-    let maximumPrice = minimumPrice
+    let foundMinPrice = data[0].value
+    let foundMaxPrice = foundMinPrice
     for (let i = 1; i < data.length; i++) {
       const price = data[i].value
-      if (price > maximumPrice) {
-        maximumPrice = price
+      if (price > foundMaxPrice) {
+        foundMaxPrice = price
       }
-      if (price < minimumPrice) {
-        minimumPrice = price
+      if (price < foundMinPrice) {
+        foundMinPrice = price
       }
     }
 
-    lowestPriceLineOptions = {
-      price: minimumPrice,
-      color: "rgba(59, 130, 246, 0.4)",
-      lineWidth: 1,
-      lineStyle: LineStyle.Dashed,
-      axisLabelVisible: true,
-      title: "thấp nhất"
-    }
-    highestPriceLineOptions = {
-      price: maximumPrice,
-      color: "rgba(168, 85, 247, 0.4)",
-      lineWidth: 1,
-      lineStyle: LineStyle.Dashed,
-      axisLabelVisible: true,
-      title: "cao nhất"
-    }
+    minimumPrice = foundMinPrice;
+    maximumPrice = foundMaxPrice;
+
     const numberFormatter = Intl.NumberFormat("vi-VN")
     lowestPrice = numberFormatter.format(minimumPrice) + "₫"
     currentPrice = numberFormatter.format(productPrice) + "₫"
@@ -203,8 +206,6 @@
     chartApi = chartRef;
 
     let chartOptions: DeepPartial<ChartOptions> = {
-      width: 400,
-      height: 600,
       layout: {
         background: { color: "#FFFFFF" },
         textColor: "#191919"
@@ -354,11 +355,11 @@
       <div
         class="flex justify-center content-center mt-2 border border-slate-400 dark:border-slate-200"
         id="chart-container">
-        <div class="w-full h-96" id="chart-element">
-          <Chart {...popupChartOptions} ref={(ref) => assignChartRefAndResize(ref)}>
+        <div class="w-full h-96">
+          <Chart autoSize={true} container={{class: 'w-full h-96'}} {...popupChartOptions} ref={(ref) => assignChartRefAndResize(ref)}>
             <LineSeries data={lineSeriesData} {...lineSeriesOption}>
-              <PriceLine {...lowestPriceLineOptions} />
-              <PriceLine {...highestPriceLineOptions} />
+              <PriceLine price={minimumPrice} {...lowestPriceLineOptions} />
+              <PriceLine price={maximumPrice} {...highestPriceLineOptions} />
             </LineSeries>
           </Chart>
         </div>

@@ -7,7 +7,7 @@
   "scripts": {
     "dev": "plasmo dev --target=firefox-mv3 --verbose",
     "build": "plasmo build --target=firefox-mv3 --verbose",
-    "package": "plasmo package"
+    "package": "plasmo package --target=firefox-mv3 --verbose"
   },
   "dependencies": {
     "lightweight-charts": "^4.0.1",
