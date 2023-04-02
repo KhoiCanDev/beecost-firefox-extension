@@ -475,7 +475,7 @@
             <tr>
               <td
                 class="border border-slate-400 dark:border-slate-200 p-2"
-                colSpan="2">Không có dữ liệu</td>
+                colSpan="4">Không có dữ liệu</td>
             </tr>
           {/if}
         </tbody>
