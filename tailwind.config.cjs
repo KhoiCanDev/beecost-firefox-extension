@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./popup/**/*.{html,js}"],
+  content: ['./popup.svelte'],
   theme: {
     extend: {
       colors: {

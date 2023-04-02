@@ -1,23 +1,45 @@
 {
   "name": "beecost-firefox-extension",
-  "version": "3.0.4",
-  "description": "This add-on display a popup on user click to display price history data on supported sites",
-  "main": "background.js",
-  "dependencies": {},
-  "devDependencies": {
-    "tailwindcss": "^3.2.7"
-  },
+  "displayName": "BeeCost (Unofficial)",
+  "version": "3.2.0",
+  "description": "Check product prices history on Vietnamese e-commerce sites",
+  "author": "KhoiCanDev <khoi.le.nt.1001@gmail.com>",
   "scripts": {
-    "dev": "npx tailwindcss -i ./includes.css -o ./popup/product_detail.css --watch --minify"
+    "dev": "plasmo dev --target=firefox-mv3 --verbose",
+    "build": "plasmo build --target=firefox-mv3 --verbose",
+    "package": "plasmo package --target=firefox-mv3 --verbose"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/KhoiCanDev/beecost-firefox-extension.git"
+  "dependencies": {
+    "lightweight-charts": "^4.0.1",
+    "plasmo": "0.67.4",
+    "svelte": "3.57.0",
+    "svelte-lightweight-charts": "^2.1.0",
+    "svelte-preprocess": "5.0.2"
   },
-  "author": "KhoiCanDev",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/KhoiCanDev/beecost-firefox-extension/issues"
+  "devDependencies": {
+    "@plasmohq/prettier-plugin-sort-imports": "3.6.3",
+    "@types/chrome": "0.0.224",
+    "@types/firefox-webext-browser": "^111.0.0",
+    "@types/node": "18.15.3",
+    "autoprefixer": "^10.4.14",
+    "postcss": "^8.4.21",
+    "prettier": "2.8.4",
+    "svelte-feather-icons": "^4.0.0",
+    "tailwindcss": "^3.2.7",
+    "typescript": "4.9.5"
   },
-  "homepage": "https://github.com/KhoiCanDev/beecost-firefox-extension#readme"
+  "manifest": {
+    "host_permissions": [
+      "https://shopee.vn/*",
+      "https://tiki.vn/*",
+      "https://www.lazada.vn/*",
+      "https://apiv3.beecost.vn/*"
+    ],
+    "browser_specific_settings": {
+      "gecko": {
+        "id": "{358bea92-053f-4e1d-8397-02ba42e20c41}",
+        "strict_min_version": "109.0"
+      }
+    }
+  }
 }
