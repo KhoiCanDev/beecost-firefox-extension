@@ -361,7 +361,7 @@
       </p>
       <button
         type="button"
-        class="px-4 py-2 font-semibold text-sm rounded-full mt-2 bg-malachite-800 dark:bg-malachite-300 text-white"
+        class="px-4 py-2 font-semibold text-sm rounded-full mt-2 bg-malachite-800 dark:bg-malachite-300 text-white dark:text-slate-800"
         on:click|once={requestPermissions}>Cho phép</button>
     </div>
   </div>
