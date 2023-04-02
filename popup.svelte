@@ -3,65 +3,79 @@
     ChartOptions,
     CreatePriceLineOptions,
     DeepPartial,
-    LineSeriesPartialOptions,
-    LineStyle,
     IChartApi,
+    LineSeriesPartialOptions,
+    LineStyle
   } from "lightweight-charts"
-  import { FrownIcon, LoaderIcon } from "svelte-feather-icons"
+  import { FrownIcon, KeyIcon, LoaderIcon } from "svelte-feather-icons"
   import { Chart, LineSeries, PriceLine } from "svelte-lightweight-charts"
 
   enum PopupState {
     Loading,
     UnsupportedPage,
+    NeedPermissions,
     NoData,
     HaveData
   }
 
-  const allowed_hosts = ["shopee.vn", "tiki.vn", "www.lazada.vn"]
-  const myPriceFormatter = Intl.NumberFormat("vi-VN").format
+  const allowedHosts = ["shopee.vn", "tiki.vn", "www.lazada.vn"]
+  const priceFormatter = Intl.NumberFormat("vi-VN").format
+  let currentTabUrl = ""
   let currentPopupState: PopupState = PopupState.Loading
   let popupProductName = ""
   let priceHistoryRecords = []
-  let chartApi: IChartApi;
+  let chartApi: IChartApi
   let popupChartOptions: DeepPartial<ChartOptions>
   let lineSeriesData = []
   let lineSeriesOption: LineSeriesPartialOptions
-  let lowestPrice = ""
-  let currentPrice = ""
-  let highestPrice = ""
+  let lowestPrice = 0
+  let currentPrice = 0
+  let highestPrice = 0
   let lowestPriceLineOptions: CreatePriceLineOptions = {
-      price: 0,
-      color: "rgba(59, 130, 246, 0.4)",
-      lineWidth: 1,
-      lineStyle: LineStyle.Dashed,
-      axisLabelVisible: true,
-      title: "thấp nhất"
-    }
+    price: 0,
+    color: "rgba(59, 130, 246, 0.4)",
+    lineWidth: 1,
+    lineStyle: LineStyle.Dashed,
+    axisLabelVisible: true,
+    title: "thấp nhất"
+  }
   let highestPriceLineOptions: CreatePriceLineOptions = {
-      price: 0,
-      color: "rgba(168, 85, 247, 0.4)",
-      lineWidth: 1,
-      lineStyle: LineStyle.Dashed,
-      axisLabelVisible: true,
-      title: "cao nhất"
-    }
-  let minimumPrice = 0;
-  let maximumPrice = 0;
+    price: 0,
+    color: "rgba(168, 85, 247, 0.4)",
+    lineWidth: 1,
+    lineStyle: LineStyle.Dashed,
+    axisLabelVisible: true,
+    title: "cao nhất"
+  }
+  let minimumPrice = 0
+  let maximumPrice = 0
 
   const loadCurrentTab = (tabs) => {
-    const productUrl = tabs[0].url
+    currentTabUrl = tabs[0].url
+    loadCurrentProductUrl()
+  }
 
+  const loadCurrentProductUrl = () => {
     let allowQuery = false
-    for (const allowed_host of allowed_hosts) {
-      if (productUrl && productUrl.includes(allowed_host)) {
+    for (const allowed_host of allowedHosts) {
+      if (currentTabUrl && currentTabUrl.includes(allowed_host)) {
         allowQuery = true
         break
       }
     }
 
-    if (productUrl && allowQuery) {
+    if (currentTabUrl && allowQuery) {
+      browser.permissions.getAll().then((currentPermissions) => {
+        if (
+          !currentPermissions.origins ||
+          currentPermissions.origins.length === 0
+        ) {
+          currentPopupState = PopupState.NeedPermissions
+        }
+      })
+
       const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${encodeURIComponent(
-        productUrl
+        currentTabUrl
       )}`
       fetch(urlSrc)
         .then((response) => {
@@ -71,7 +85,9 @@
             currentPopupState = PopupState.NoData
           }
         })
-        .then((data) => loadProductPage(data))
+        .then((data) => {
+          loadProductPage(data)
+        })
     } else {
       currentPopupState = PopupState.UnsupportedPage
     }
@@ -100,7 +116,7 @@
     createChartElement(prices, timestamps, productPrice)
 
     const timePriceZip = timestamps.map((e, i) => [e, prices[i]])
-    createLowestPricesTable(timePriceZip)
+    createLowestPricesTable(timePriceZip, productPrice)
 
     currentPopupState = PopupState.HaveData
   }
@@ -134,16 +150,15 @@
       }
     }
 
-    minimumPrice = foundMinPrice;
-    maximumPrice = foundMaxPrice;
+    minimumPrice = foundMinPrice
+    maximumPrice = foundMaxPrice
 
-    const numberFormatter = Intl.NumberFormat("vi-VN")
-    lowestPrice = numberFormatter.format(minimumPrice) + "₫"
-    currentPrice = numberFormatter.format(productPrice) + "₫"
-    highestPrice = numberFormatter.format(maximumPrice) + "₫"
+    lowestPrice = minimumPrice
+    currentPrice = productPrice
+    highestPrice = maximumPrice
   }
 
-  const createLowestPricesTable = (timePriceZip) => {
+  const createLowestPricesTable = (timePriceZip, currentPrice) => {
     let minimumPrice = timePriceZip[0][1]
     let maximumPrice = minimumPrice
     for (let i = 1; i < timePriceZip.length; i++) {
@@ -183,14 +198,30 @@
 
       if (datePriceMap.size > 0) {
         const reversedMap = new Map(Array.from(datePriceMap).reverse())
+        const currentDate = new Date()
         let cnt = 0
         for (const [date, price] of reversedMap) {
           if (cnt == 5) {
             break
           }
+          const splittedDateParts = date.split("-")
+
+          const saleDate = new Date(
+            Number(splittedDateParts[2]),
+            Number(splittedDateParts[1] - 1),
+            Number(splittedDateParts[0])
+          )
+          const difference = currentDate.getTime() - saleDate.getTime()
+          const daysAgo = Math.ceil(difference / (1000 * 3600 * 24))
+          const discounted = Math.ceil(
+            ((currentPrice - price) / currentPrice) * 100
+          )
+
           priceHistoryRecords.push({
+            daysAgo,
             date,
-            price
+            price,
+            discounted
           })
           cnt += 1
         }
@@ -198,12 +229,30 @@
     }
   }
 
+  const requestPermissions = () => {
+    browser.permissions
+      .request({
+        origins: [
+          "https://shopee.vn/*",
+          "https://tiki.vn/*",
+          "https://www.lazada.vn/*",
+          "https://apiv3.beecost.vn/*"
+        ]
+      })
+      .then((result) => {
+        if (result) {
+          loadCurrentProductUrl()
+        }
+      })
+    window.close()
+  }
+
   const onError = (error) => {
     console.error(`Error: ${error}`)
   }
 
   const assignChartRefAndResize = (chartRef: IChartApi) => {
-    chartApi = chartRef;
+    chartApi = chartRef
 
     let chartOptions: DeepPartial<ChartOptions> = {
       layout: {
@@ -237,7 +286,7 @@
       },
       localization: {
         locale: "vi-VN",
-        priceFormatter: myPriceFormatter
+        priceFormatter: priceFormatter
       }
     }
     let darkMode = false
@@ -276,10 +325,10 @@
       color: darkMode ? "#21E22F" : "#17cb27",
       crosshairMarkerVisible: true,
       lastValueVisible: true,
-      priceLineVisible: false,
+      priceLineVisible: false
     }
 
-    chartApi?.timeScale()?.fitContent();
+    chartApi?.timeScale()?.fitContent()
   }
 
   browser.tabs
@@ -291,13 +340,29 @@
   <div
     class="bg-white dark:bg-gray-800 shadow-md rounded-lg max-w-lg w-64 h-80">
     <div class="flex flex-col items-center justify-center w-full h-full">
-      <div>
-        <LoaderIcon
-          class="loading-spin-animation text-black dark:text-white h-32 w-32" />
+      <div class="loading-spin-animation">
+        <LoaderIcon class="text-black dark:text-white h-32 w-32" />
       </div>
       <p class="p-4 font-sans text-lg text-black dark:text-white text-center">
         Đang tải dữ liệu...
       </p>
+    </div>
+  </div>
+{:else if currentPopupState === PopupState.NeedPermissions}
+  <div
+    class="bg-white dark:bg-gray-800 shadow-md rounded-lg max-w-lg w-64 h-80">
+    <div class="flex flex-col items-center justify-center w-full h-full">
+      <div>
+        <KeyIcon
+          class="loading-spin-animation text-black dark:text-white h-32 w-32" />
+      </div>
+      <p class="p-4 font-sans text-lg text-black dark:text-white text-center">
+        Ứng dụng cần một số quyền để hoạt động
+      </p>
+      <button
+        type="button"
+        class="px-4 py-2 font-semibold text-sm rounded-full mt-2 bg-malachite-800 dark:bg-malachite-300 text-white"
+        on:click|once={requestPermissions}>Cho phép</button>
     </div>
   </div>
 {:else if currentPopupState === PopupState.UnsupportedPage || currentPopupState === PopupState.NoData}
@@ -317,7 +382,7 @@
     </div>
   </div>
 {:else}
-  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg w-content">
+  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg w-have-content">
     <div class="px-5 py-5">
       <p class="text-gray-900 dark:text-white font-semibold text-xl truncate">
         {popupProductName}
@@ -325,7 +390,7 @@
       <div class="pt-5 flex items-center justify-between gap-2">
         <div class="flex flex-col">
           <div class="text-3xl font-bold text-blue-500 dark:text-blue-300">
-            {lowestPrice}
+            {priceFormatter(lowestPrice)}₫
           </div>
           <div
             class="text-sm text-blue-800 dark:text-blue-300 dark:text-opacity-60 text-opacity-40">
@@ -335,7 +400,7 @@
         <div class="flex flex-col">
           <div
             class="text-3xl font-bold text-malachite-500 dark:text-malachite-300">
-            {currentPrice}
+            {priceFormatter(currentPrice)}₫
           </div>
           <div
             class="text-sm text-malachite-800 dark:text-malachite-300 dark:text-opacity-60 text-opacity-40">
@@ -344,7 +409,7 @@
         </div>
         <div class="flex flex-col">
           <div class="text-3xl font-bold text-purple-500 dark:text-purple-300">
-            {highestPrice}
+            {priceFormatter(highestPrice)}₫
           </div>
           <div
             class="text-sm text-purple-800 dark:text-purple-300 dark:text-opacity-60 text-opacity-40">
@@ -356,7 +421,11 @@
         class="flex justify-center content-center mt-2 border border-slate-400 dark:border-slate-200"
         id="chart-container">
         <div class="w-full h-96">
-          <Chart autoSize={true} container={{class: 'w-full h-96'}} {...popupChartOptions} ref={(ref) => assignChartRefAndResize(ref)}>
+          <Chart
+            autoSize={true}
+            container={{ class: "w-full h-96" }}
+            {...popupChartOptions}
+            ref={(ref) => assignChartRefAndResize(ref)}>
             <LineSeries data={lineSeriesData} {...lineSeriesOption}>
               <PriceLine price={minimumPrice} {...lowestPriceLineOptions} />
               <PriceLine price={maximumPrice} {...highestPriceLineOptions} />
@@ -373,11 +442,17 @@
         <thead>
           <tr>
             <th
-              class="border bg-blue-300 dark:bg-blue-800 border-slate-400 dark:border-slate-200 p-2"
+              class="border bg-blue-300 dark:bg-blue-800 border-slate-400 dark:border-slate-200 p-2 text-left"
               >Ngày</th>
+            <th
+              class="border bg-blue-300 dark:bg-blue-800 border-slate-400 dark:border-slate-200 p-2 text-left"
+              >Cách đây</th>
             <th
               class="border bg-blue-300 dark:bg-blue-800 border-slate-400 dark:border-slate-200 p-2 text-right"
               >Giá</th>
+            <th
+              class="border bg-blue-300 dark:bg-blue-800 border-slate-400 dark:border-slate-200 p-2 text-right"
+              >Giảm</th>
           </tr>
         </thead>
         <tbody>
@@ -386,9 +461,14 @@
               <tr>
                 <td class="border border-slate-400 dark:border-slate-200 p-2"
                   >{priceHistoryRecord.date}</td>
+                <td class="border border-slate-400 dark:border-slate-200 p-2"
+                  >{priceHistoryRecord.daysAgo} ngày</td>
                 <td
                   class="border border-slate-400 dark:border-slate-200 p-2 text-right"
-                  >{priceHistoryRecord.price}</td>
+                  >{priceFormatter(priceHistoryRecord.price)}₫</td>
+                <td
+                  class="border border-slate-400 dark:border-slate-200 p-2 text-right"
+                  >{priceHistoryRecord.discounted}%</td>
               </tr>
             {/each}
           {:else}
@@ -429,5 +509,9 @@
     to {
       transform: rotate(360deg);
     }
+  }
+
+  .w-have-content {
+    width: 40rem;
   }
 </style>
