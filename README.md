@@ -10,6 +10,7 @@ This extension act as a wrapper of BeeCost site. All data is provided by BeeCost
 - lazada.vn
 
 ## Development guide
+- Run `npm install` to install dependencies
 - Edit the codes in `.svelte` or `.ts` files
 - Run command to build the source: `npm run build`
 - Add the built manifest file in `build` folder to debugging window to test
