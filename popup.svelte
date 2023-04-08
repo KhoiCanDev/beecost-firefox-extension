@@ -9,6 +9,7 @@
   } from "lightweight-charts"
   import { FrownIcon, KeyIcon, LoaderIcon } from "svelte-feather-icons"
   import { Chart, LineSeries, PriceLine } from "svelte-lightweight-charts"
+  import { findMedian } from '~util/math'
 
   enum PopupState {
     Loading,
@@ -116,7 +117,7 @@
     createChartElement(prices, timestamps, productPrice)
 
     const timePriceZip = timestamps.map((e, i) => [e, prices[i]])
-    createLowestPricesTable(timePriceZip, productPrice)
+    createLowestPricesTable(prices, timePriceZip, productPrice)
 
     currentPopupState = PopupState.HaveData
   }
@@ -158,21 +159,18 @@
     highestPrice = maximumPrice
   }
 
-  const createLowestPricesTable = (timePriceZip, currentPrice) => {
+  const createLowestPricesTable = (prices, timePriceZip, currentPrice) => {
     let minimumPrice = timePriceZip[0][1]
-    let maximumPrice = minimumPrice
+    let medianPrice = findMedian(prices);
     for (let i = 1; i < timePriceZip.length; i++) {
       const price = timePriceZip[i][1]
-      if (price > maximumPrice) {
-        maximumPrice = price
-      }
       if (price < minimumPrice) {
         minimumPrice = price
       }
     }
-    if (minimumPrice !== maximumPrice) {
-      const minMaxDiff = maximumPrice - minimumPrice
-      let allowedOffset = minMaxDiff * 0.3
+    if (minimumPrice !== medianPrice) {
+      const minMedianDiff = medianPrice - minimumPrice
+      let allowedOffset = minMedianDiff * 0.3
       const toPrice = minimumPrice + allowedOffset
 
       const datePriceMap = new Map()
