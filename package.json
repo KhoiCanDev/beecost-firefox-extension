@@ -20,7 +20,7 @@
     "@plasmohq/prettier-plugin-sort-imports": "3.6.4",
     "@types/chrome": "0.0.231",
     "@types/firefox-webext-browser": "^111.0.0",
-    "@types/node": "18.15.11",
+    "@types/node": "18.16.0",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.22",
     "prettier": "2.8.7",
