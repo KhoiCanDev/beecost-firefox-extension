@@ -1,17 +1,17 @@
 import {
-  ChartOptions,
-  CreatePriceLineOptions,
-  DeepPartial,
-  LineSeriesPartialOptions,
   LineStyle,
-  SingleValueData,
-  UTCTimestamp
+  type ChartOptions,
+  type CreatePriceLineOptions,
+  type DeepPartial,
+  type LineSeriesPartialOptions,
+  type SingleValueData,
+  type UTCTimestamp
 } from "lightweight-charts"
 
-import { DEFAULT_PRICE_FORMATTER, isDarkModeSystem } from "./system"
+import { DEFAULT_PRICE_FORMATTER, isSystemUsingDarkMode } from "./system"
 
 export function getChartOptions(): DeepPartial<ChartOptions> {
-  const isDarkMode = isDarkModeSystem()
+  const isDarkMode = isSystemUsingDarkMode()
   let chartOptions: DeepPartial<ChartOptions> = getDefaultChartOptions()
   if (isDarkMode) {
     chartOptions = getDarkModeChartOptions(chartOptions)
@@ -20,7 +20,7 @@ export function getChartOptions(): DeepPartial<ChartOptions> {
 }
 
 export function getLineSeriesOptions(): LineSeriesPartialOptions {
-  const isDarkMode = isDarkModeSystem()
+  const isDarkMode = isSystemUsingDarkMode()
   const lineSeriesOptions: LineSeriesPartialOptions = {
     lineWidth: 2,
     color: isDarkMode ? "#21E22F" : "#17cb27",

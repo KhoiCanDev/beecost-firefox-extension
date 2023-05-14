@@ -9,14 +9,14 @@
   import {
     ArrowDownRightIcon,
     ArrowRightIcon,
-    ArrowUpRightIcon,
-    FrownIcon,
-    KeyIcon,
-    LoaderIcon
+    ArrowUpRightIcon
   } from "svelte-feather-icons"
   import { Chart, LineSeries, PriceLine } from "svelte-lightweight-charts"
 
-  import { PopupPrices, getDefaultPopupPrices } from "~model/popup-prices"
+  import LoadingView from "~components/loading-view.svelte"
+  import NoDataView from "~components/no-data-view.svelte"
+  import RequestPermissionsView from "~components/request-permissions-view.svelte"
+  import { type PopupPrices, getDefaultPopupPrices } from "~model/popup-prices"
   import { PopupState } from "~model/popup-state"
   import { PriceStatus } from "~model/price-status"
   import {
@@ -198,22 +198,11 @@
     }
   }
 
-  const requestPermissions = () => {
-    browser.permissions
-      .request({
-        origins: [
-          "https://shopee.vn/*",
-          "https://tiki.vn/*",
-          "https://www.lazada.vn/*",
-          "https://apiv3.beecost.vn/*"
-        ]
-      })
-      .then((result) => {
-        if (result) {
-          loadCurrentProductUrl()
-        }
-      })
-    window.close()
+  const handlePermissionsResult = (event) => {
+    const allowedState: boolean = event.detail.state
+    if (allowedState) {
+      loadCurrentProductUrl()
+    }
   }
 
   const onError = (error) => {
@@ -233,52 +222,14 @@
 </script>
 
 {#if currentPopupState === PopupState.Loading}
-  <div
-    class="bg-white dark:bg-gray-800 shadow-md rounded-lg max-w-lg w-64 h-80">
-    <div class="flex flex-col items-center justify-center w-full h-full">
-      <div class="loading-spin-animation">
-        <LoaderIcon class="text-black dark:text-white h-32 w-32" />
-      </div>
-      <p class="p-4 font-sans text-lg text-black dark:text-white text-center">
-        Đang tải dữ liệu...
-      </p>
-    </div>
-  </div>
+  <LoadingView />
 {:else if currentPopupState === PopupState.NeedPermissions}
-  <div
-    class="bg-white dark:bg-gray-800 shadow-md rounded-lg max-w-lg w-64 h-80">
-    <div class="flex flex-col items-center justify-center w-full h-full">
-      <div>
-        <KeyIcon
-          class="loading-spin-animation text-black dark:text-white h-32 w-32" />
-      </div>
-      <p class="p-4 font-sans text-lg text-black dark:text-white text-center">
-        Ứng dụng cần một số quyền để hoạt động
-      </p>
-      <button
-        type="button"
-        class="px-4 py-2 font-semibold text-sm rounded-full mt-2 bg-malachite-800 dark:bg-malachite-300 text-white dark:text-slate-800"
-        on:click|once={requestPermissions}>Cho phép</button>
-    </div>
-  </div>
+  <RequestPermissionsView on:permissionsResult={handlePermissionsResult} />
 {:else if currentPopupState === PopupState.UnsupportedPage || currentPopupState === PopupState.NoData}
-  <div
-    class="bg-white dark:bg-gray-800 shadow-md rounded-lg max-w-lg w-64 h-80">
-    <div class="flex flex-col items-center justify-center w-full h-full">
-      <div>
-        <FrownIcon class="text-black dark:text-white h-32 w-32" />
-      </div>
-      <p class="p-4 font-sans text-lg text-black dark:text-white text-center">
-        {#if currentPopupState === PopupState.UnsupportedPage}
-          Không hỗ trợ trang này
-        {:else}
-          Không có dữ liệu cho sản phẩm này
-        {/if}
-      </p>
-    </div>
-  </div>
+  <NoDataView popupState={currentPopupState} />
 {:else}
-  <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg w-have-content overflow-y-auto">
+  <div
+    class="bg-white dark:bg-gray-800 shadow-md rounded-lg w-have-content overflow-y-auto">
     <div class="px-5 py-5">
       <p class="text-gray-900 dark:text-white font-semibold text-xl truncate">
         {popupProductName}
@@ -405,20 +356,6 @@
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
-
-  .loading-spin-animation {
-    animation: spin 4s infinite linear;
-  }
-
-  @keyframes spin {
-    from {
-      transform: rotate(0deg);
-    }
-
-    to {
-      transform: rotate(360deg);
-    }
-  }
 
   .w-have-content {
     width: 40rem;

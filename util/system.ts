@@ -1,6 +1,6 @@
 export const DEFAULT_PRICE_FORMATTER = Intl.NumberFormat("vi-VN").format
 
-export function isDarkModeSystem() {
+export function isSystemUsingDarkMode() {
   let darkMode = false
   if (
     window.matchMedia &&
