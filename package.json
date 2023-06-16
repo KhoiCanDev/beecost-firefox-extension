@@ -6,12 +6,13 @@
   "author": "KhoiCanDev <khoi.le.nt.1001@gmail.com>",
   "scripts": {
     "dev": "plasmo dev --target=firefox-mv3 --verbose",
+    "build-dev": "plasmo build --target=firefox-mv3 --source-maps --no-minify --verbose",
     "build": "plasmo build --target=firefox-mv3 --verbose",
     "package": "plasmo package --target=firefox-mv3 --verbose"
   },
   "dependencies": {
     "lightweight-charts": "^4.0.1",
-    "plasmo": "0.75.2",
+    "plasmo": "0.76.2",
     "svelte": "3.59.1",
     "svelte-lightweight-charts": "^2.2.0",
     "svelte-preprocess": "5.0.4"
@@ -20,11 +21,11 @@
     "@plasmohq/prettier-plugin-sort-imports": "3.6.4",
     "@types/chrome": "0.0.237",
     "@types/firefox-webext-browser": "^111.0.0",
-    "@types/node": "20.3.0",
+    "@types/node": "20.3.1",
     "autoprefixer": "^10.4.14",
     "postcss": "^8.4.24",
     "prettier": "2.8.8",
-    "svelte-feather-icons": "^4.0.1",
+    "svelte-feather-icons": "4.0.0",
     "tailwindcss": "^3.3.2",
     "typescript": "5.1.3"
   },

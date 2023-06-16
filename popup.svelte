@@ -199,16 +199,71 @@
 {:else if currentPopupState === PopupState.UnsupportedPage || currentPopupState === PopupState.NoData}
   <NoDataView popupState={currentPopupState} />
 {:else}
-  <PriceDataView
-    {popupProductName}
-    {popupPrices}
-    {priceStatus}
-    {lineSeriesData}
-    {priceHistoryRecords} />
+  <div class="border border-gray-300">
+    <ul class="flex list-none p-0">
+      <li class="mr-2">
+        <button
+          class="tabbed-tab tabbed-tab-active font-semibold rounded-t-lg bg-gray-100 text-gray-700 focus:outline-none">
+          Lịch sử giá
+        </button>
+      </li>
+      <li class="mr-2">
+        <button
+          class="tabbed-tab font-semibold rounded-t-lg bg-gray-100 text-gray-700 focus:outline-none">
+          Lịch sử giảm
+        </button>
+      </li>
+      <li class="mr-2">
+        <button
+          class="tabbed-tab font-semibold rounded-t-lg bg-gray-100 text-gray-700 focus:outline-none">
+          Danh sách mong chờ
+        </button>
+      </li>
+      <li class="mr-2">
+        <button
+          class="tabbed-tab font-semibold rounded-t-lg bg-gray-100 text-gray-700 focus:outline-none">
+          Thiết lập
+        </button>
+      </li>
+    </ul>
+    <div
+      class=" bg-white border-t">
+      <PriceDataView
+        {popupProductName}
+        {popupPrices}
+        {priceStatus}
+        {lineSeriesData}
+        {priceHistoryRecords} />
+    </div>
+    <div
+      class="bg-white border-t hidden">
+      Content for Tab 2 goes here.
+    </div>
+    <div
+      class=" bg-white border-t hidden">
+      Content for Tab 3 goes here.
+    </div>
+  </div>
 {/if}
 
 <style lang="postcss">
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
+
+  .tabbed-tab {
+    border: 1px solid #ddd;
+    border-bottom: none;
+    background-color: #f2f2f2;
+    color: #666;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-weight: bold;
+  }
+  .tabbed-tab-active {
+    background-color: #fff;
+    color: #333;
+    border-color: #ddd;
+    border-bottom-color: #fff;
+  }
 </style>
