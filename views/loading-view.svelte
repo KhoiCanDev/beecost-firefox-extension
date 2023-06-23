@@ -3,7 +3,7 @@
 </script>
 
 <div class="bg-white dark:bg-gray-800 shadow-md rounded-lg max-w-lg w-64 h-80">
-  <div class="px-5 py-5">
+  <div class="px-5 py-5 h-full">
     <div class="flex flex-col items-center justify-center w-full h-full">
       <div class="loading-spin-animation">
         <LoaderIcon class="text-black dark:text-white h-32 w-32" />
