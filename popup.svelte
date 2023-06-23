@@ -74,6 +74,11 @@
     const productPrice = product.data.product_base.price
     const productName = product.data.product_base.name
 
+    if (!productName || !productPrice) {
+      currentPopupState = PopupState.NoData
+      return
+    }
+
     const priceHistoryApi = `https://apiv3.beecost.vn/product/history_price?product_base_id=${productId}&price_current=${productPrice}`
     const priceHistoryResponse = await fetch(priceHistoryApi)
     const priceHistoryJson = await priceHistoryResponse.json()
@@ -82,13 +87,12 @@
     const prices = historyData.price
     const timestamps = historyData.price_ts
 
-    popupProductName = productName
-
     createChartElement(prices, timestamps, productPrice)
 
     const timePriceZip = timestamps.map((e, i) => [e, prices[i]])
     createLowestPricesTable(prices, timePriceZip, productPrice)
-
+    
+    popupProductName = productName
     currentPopupState = PopupState.HaveData
   }
 
