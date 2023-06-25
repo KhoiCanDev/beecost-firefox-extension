@@ -22,5 +22,6 @@ This extension act as a wrapper of BeeCost site. All data is provided by BeeCost
 ## TODO list
 - Tabbed interface: price history, wishlist, settings
 - English UI, language switcher
+- Local prices history
 - Wishlist feature
 - Deployment pipeline for plasmo
