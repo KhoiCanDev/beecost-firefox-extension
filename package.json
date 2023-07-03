@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "lightweight-charts": "^4.0.1",
-    "plasmo": "0.76.3",
+    "plasmo": "0.77.5",
     "svelte": "3.59.1",
     "svelte-lightweight-charts": "^2.2.0",
     "svelte-preprocess": "5.0.4"
