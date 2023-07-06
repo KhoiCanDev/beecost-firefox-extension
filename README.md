@@ -24,4 +24,5 @@ This extension act as a wrapper of BeeCost site. All data is provided by BeeCost
 - English UI, language switcher
 - Local prices history
 - Wishlist feature
+- Inline UI that can be triggered by a float button (inspired by DutyCast)
 - Deployment pipeline for plasmo
