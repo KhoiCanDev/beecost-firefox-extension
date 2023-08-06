@@ -1,0 +1,33 @@
+{
+  "page": {
+    "common": {
+      "no-data": "Không có dữ liệu"
+    },
+
+    "chart": {
+      "highest": "cao nhất",
+      "lowest": "thấp nhất"
+    },
+
+    "loading": {
+      "in-progress": "Đang tải dữ liệu..."
+    },
+
+    "no-data-available": {
+      "not-supported-page": "Không hỗ trợ trang này",
+      "no-product-data": "Không có dữ liệu cho sản phẩm này"
+    },
+
+    "price-data": {
+      "lowest": "Thấp nhất",
+      "current": "Hiện tại",
+      "highest": "Cao nhất",
+      "discount-moments": "Các thời điểm thấp nhất gần đây"
+    },
+
+    "request-permissions": {
+      "app-need-permissions": "Ứng dụng cần một số quyền để hoạt động",
+      "allow": "Cho phép"
+    }
+  }
+}

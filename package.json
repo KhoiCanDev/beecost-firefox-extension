@@ -1,7 +1,7 @@
 {
   "name": "beecost-firefox-extension",
   "displayName": "BeeCost (Unofficial)",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "Check product prices history on Vietnamese e-commerce sites",
   "author": "KhoiCanDev <khoi.le.nt.1001@gmail.com>",
   "scripts": {
@@ -13,6 +13,7 @@
     "lightweight-charts": "^4.0.1",
     "plasmo": "0.82.0",
     "svelte": "4.1.2",
+    "svelte-i18n": "^3.7.0",
     "svelte-lightweight-charts": "^2.2.0",
     "svelte-preprocess": "5.0.4"
   },

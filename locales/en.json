@@ -1,0 +1,33 @@
+{
+  "page": {
+    "common": {
+      "no-data": "No data available"
+    },
+
+    "chart": {
+      "highest": "highest",
+      "lowest": "lowest"
+    },
+
+    "loading": {
+      "in-progress": "Getting data..."
+    },
+
+    "no-data-available": {
+      "not-supported-page": "This page is not supported",
+      "no-product-data": "No data available for this product"
+    },
+
+    "price-data": {
+      "lowest": "Lowest",
+      "current": "Current",
+      "highest": "Highest",
+      "discount-moments": "High discounted moments"
+    },
+
+    "request-permissions": {
+      "app-need-permissions": "The addon needs some permissions to be able to run",
+      "allow": "Allow"
+    }
+  }
+}
