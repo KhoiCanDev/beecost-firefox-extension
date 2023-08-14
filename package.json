@@ -22,7 +22,7 @@
     "@types/chrome": "0.0.242",
     "@types/firefox-webext-browser": "^111.0.0",
     "@types/node": "20.4.8",
-    "autoprefixer": "^10.4.14",
+    "autoprefixer": "^10.4.15",
     "postcss": "^8.4.24",
     "prettier": "2.8.8",
     "svelte-feather-icons": "4.0.0",
