@@ -10,6 +10,8 @@
     "package": "plasmo package --target=firefox-mv3 --verbose"
   },
   "dependencies": {
+    "cross-fetch": "^4.0.0",
+    "fetch-retry": "^5.0.6",
     "lightweight-charts": "^4.0.1",
     "plasmo": "0.83.0",
     "svelte": "4.2.0",

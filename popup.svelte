@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { fetch as orgFetch } from "cross-fetch"
+  import { default as fetchr } from "fetch-retry"
   import type { IChartApi, SingleValueData } from "lightweight-charts"
 
   import { type PopupPrices, getDefaultPopupPrices } from "~model/popup-prices"
@@ -43,24 +45,32 @@
         ) {
           currentPopupState = PopupState.NeedPermissions
         } else {
-          const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${encodeURIComponent(
-            currentTabUrl
-          )}`
-          fetch(urlSrc)
-            .then((response) => {
-              if (response.ok) {
-                return response.json()
-              } else {
-                currentPopupState = PopupState.NoData
-              }
-            })
-            .then((data) => {
-              loadProductPage(data)
-            })
+          loadProductData()
         }
       })
     } else {
       currentPopupState = PopupState.UnsupportedPage
+    }
+  }
+
+  const retryOption = {
+    retries: 5,
+    retryDelay: 800,
+    retryOn: [503, 504]
+  }
+
+  const loadProductData = async () => {
+    const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${encodeURIComponent(
+      currentTabUrl
+    )}`
+    const myFetch = fetchr(orgFetch)
+    const response = await myFetch(urlSrc, retryOption)
+
+    if (response.ok) {
+      var data = await response.json()
+      loadProductPage(data)
+    } else {
+      currentPopupState = PopupState.NoData
     }
   }
 
@@ -80,7 +90,8 @@
     }
 
     const priceHistoryApi = `https://apiv3.beecost.vn/product/history_price?product_base_id=${productId}&price_current=${productPrice}`
-    const priceHistoryResponse = await fetch(priceHistoryApi)
+    const myFetch = fetchr(orgFetch)
+    const priceHistoryResponse = await myFetch(priceHistoryApi, retryOption)
     const priceHistoryJson = await priceHistoryResponse.json()
 
     const historyData = priceHistoryJson.data.product_history_data.item_history
@@ -91,7 +102,7 @@
 
     const timePriceZip = timestamps.map((e, i) => [e, prices[i]])
     createLowestPricesTable(prices, timePriceZip, productPrice)
-    
+
     popupProductName = productName
     currentPopupState = PopupState.HaveData
   }
