@@ -13,7 +13,7 @@
     "cross-fetch": "^4.0.0",
     "fetch-retry": "^5.0.6",
     "lightweight-charts": "^4.0.1",
-    "plasmo": "0.83.0",
+    "plasmo": "0.84.0",
     "svelte": "4.2.1",
     "svelte-i18n": "^3.7.4",
     "svelte-lightweight-charts": "^2.2.0",
