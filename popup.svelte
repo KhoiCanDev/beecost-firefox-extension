@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { fetch as orgFetch } from "cross-fetch"
+  import { fetch as crossFetch } from "cross-fetch"
   import { default as fetchr } from "fetch-retry"
   import type { IChartApi, SingleValueData } from "lightweight-charts"
 
@@ -14,6 +14,13 @@
   import RequestPermissionsView from "~views/request-permissions-view.svelte"
 
   const allowedHosts = ["shopee.vn", "tiki.vn", "www.lazada.vn"]
+  const retryableFetch = fetchr(crossFetch)
+  const fetchRetryOption = {
+    retries: 5,
+    retryDelay: 800,
+    retryOn: [503, 504]
+  }
+
   let currentTabUrl = ""
   let currentPopupState: PopupState = PopupState.Loading
   let popupProductName = ""
@@ -28,50 +35,46 @@
     loadCurrentProductUrl()
   }
 
-  const loadCurrentProductUrl = () => {
-    let allowQuery = false
-    for (const allowedHost of allowedHosts) {
-      if (currentTabUrl && currentTabUrl.includes(allowedHost)) {
-        allowQuery = true
-        break
-      }
-    }
-
-    if (currentTabUrl && allowQuery) {
-      browser.permissions.getAll().then((currentPermissions) => {
-        if (
-          !currentPermissions.origins ||
-          currentPermissions.origins.length === 0
-        ) {
-          currentPopupState = PopupState.NeedPermissions
-        } else {
-          loadProductData()
-        }
-      })
-    } else {
-      currentPopupState = PopupState.UnsupportedPage
-    }
+  const onError = (error) => {
+    console.error(`Error: ${error}`)
   }
 
-  const retryOption = {
-    retries: 5,
-    retryDelay: 800,
-    retryOn: [503, 504]
+  const loadCurrentProductUrl = async () => {
+    const allowQuery =
+      currentTabUrl &&
+      allowedHosts.some((allowedHost) => currentTabUrl.includes(allowedHost))
+
+    if (!allowQuery) {
+      currentPopupState = PopupState.UnsupportedPage
+      return
+    }
+
+    const currentPermissions = await browser.permissions.getAll()
+
+    if (
+      !currentPermissions.origins ||
+      currentPermissions.origins.length === 0
+    ) {
+      currentPopupState = PopupState.NeedPermissions
+      return
+    }
+
+    await loadProductData()
   }
 
   const loadProductData = async () => {
     const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${encodeURIComponent(
       currentTabUrl
     )}`
-    const myFetch = fetchr(orgFetch)
-    const response = await myFetch(urlSrc, retryOption)
+    const response = await retryableFetch(urlSrc, fetchRetryOption)
 
-    if (response.ok) {
-      var data = await response.json()
-      loadProductPage(data)
-    } else {
+    if (!response.ok) {
       currentPopupState = PopupState.NoData
+      return
     }
+
+    var data = await response.json()
+    loadProductPage(data)
   }
 
   const loadProductPage = async (product) => {
@@ -80,9 +83,15 @@
       return
     }
 
-    const productId = product.data.product_base.product_base_id
-    const productPrice = product.data.product_base.price
-    const productName = product.data.product_base.name
+    const {
+      data: {
+        product_base: {
+          product_base_id: productId,
+          price: productPrice,
+          name: productName
+        }
+      }
+    } = product
 
     if (!productName || !productPrice) {
       currentPopupState = PopupState.NoData
@@ -90,13 +99,20 @@
     }
 
     const priceHistoryApi = `https://apiv3.beecost.vn/product/history_price?product_base_id=${productId}&price_current=${productPrice}`
-    const myFetch = fetchr(orgFetch)
-    const priceHistoryResponse = await myFetch(priceHistoryApi, retryOption)
+
+    const priceHistoryResponse = await retryableFetch(
+      priceHistoryApi,
+      fetchRetryOption
+    )
     const priceHistoryJson = await priceHistoryResponse.json()
 
-    const historyData = priceHistoryJson.data.product_history_data.item_history
-    const prices = historyData.price
-    const timestamps = historyData.price_ts
+    const {
+      data: {
+        product_history_data: {
+          item_history: { price: prices, price_ts: timestamps }
+        }
+      }
+    } = priceHistoryJson
 
     createChartElement(prices, timestamps, productPrice)
 
@@ -196,10 +212,6 @@
     if (allowedState) {
       loadCurrentProductUrl()
     }
-  }
-
-  const onError = (error) => {
-    console.error(`Error: ${error}`)
   }
 
   browser.tabs
