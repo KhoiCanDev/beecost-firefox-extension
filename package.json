@@ -15,7 +15,7 @@
     "lightweight-charts": "^4.1.1",
     "plasmo": "0.85.0",
     "svelte": "4.2.8",
-    "svelte-i18n": "^3.7.4",
+    "svelte-i18n": "^4.0.0",
     "svelte-lightweight-charts": "^2.2.0",
     "svelte-preprocess": "5.0.4"
   },
