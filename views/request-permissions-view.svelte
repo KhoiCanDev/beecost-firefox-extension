@@ -1,6 +1,6 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte"
-  import { KeyIcon } from "svelte-feather-icons"
+  import Key from "svelte-bootstrap-icons/lib/Key.svelte"
 
   const dispatch = createEventDispatcher()
 
@@ -27,7 +27,7 @@
   <div class="px-5 py-5">
     <div class="flex flex-col items-center justify-center w-full h-full">
       <div>
-        <KeyIcon
+        <Key
           class="loading-spin-animation text-black dark:text-white h-32 w-32" />
       </div>
       <p class="p-4 font-sans text-lg text-black dark:text-white text-center">

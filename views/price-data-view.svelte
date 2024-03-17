@@ -105,10 +105,10 @@
 
     <div class="flex justify-end mt-5">
       <div class="text-xs text-black dark:text-white">
-        Powered by <a
+        Dữ liệu cung cấp bởi <a
           class="text-yellow-600 cursor-pointer"
-          href="https://beecost.vn/"
-          target="_blank">BeeCost</a>
+          href="https://muathongminh.vn"
+          target="_blank">MuaThongMinh</a>
       </div>
     </div>
   </div>
