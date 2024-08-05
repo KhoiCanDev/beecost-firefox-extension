@@ -17,7 +17,7 @@
     "svelte": "4.2.18",
     "svelte-i18n": "^4.0.0",
     "svelte-lightweight-charts": "^2.2.0",
-    "svelte-preprocess": "5.1.4"
+    "svelte-preprocess": "6.0.2"
   },
   "devDependencies": {
     "@plasmohq/prettier-plugin-sort-imports": "4.0.1",
