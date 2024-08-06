@@ -1,0 +1,58 @@
+name: Build and Publish
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  build_firefox:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 'lts'
+      - run: npm ci
+      - run: npm run build
+      - name: Zip firefox
+        run: zip -qq -r firefox.zip *
+        working-directory: build/firefox-mv3-prod
+      - uses: actions/upload-artifact@v4
+        with:
+          name: firefox
+          path: build/firefox-mv3-prod/firefox.zip
+
+  publish_firefox:
+    needs: build_firefox
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Zip source
+        run: zip -qq -r src.zip *
+      - name: Download extension
+        uses: actions/download-artifact@v4
+        with:
+          name: firefox
+      - name: Publish Firefox
+        uses: maoserr/firefox_extension_publish@v1.0.4
+        with:
+          firefox_extension_id: 358bea92-053f-4e1d-8397-02ba42e20c41
+          api_key: ${{ secrets.FIREFOX_API_KEY }}
+          api_secret: ${{ secrets.FIREFOX_API_SECRET }}
+          file: firefox.zip
+          src_file: src.zip
+
+  publish_release:
+    needs: [ build_firefox ]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Download extension
+        uses: actions/download-artifact@v4
+      - name: Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            firefox/firefox.zip
