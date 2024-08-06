@@ -12,7 +12,7 @@
   "dependencies": {
     "cross-fetch": "^4.0.0",
     "fetch-retry": "^6.0.0",
-    "lightweight-charts": "^4.1.7",
+    "lightweight-charts": "^4.2.0",
     "plasmo": "0.88.0",
     "svelte": "4.2.18",
     "svelte-i18n": "^4.0.0",
