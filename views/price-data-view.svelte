@@ -17,8 +17,8 @@
     getHighestPriceLineOptions,
     getLineSeriesOptions,
     getLowestPriceLineOptions
-  } from "~util/chart"
-  import { DEFAULT_PRICE_FORMATTER } from "~util/system"
+  } from "~utils/chart"
+  import { DEFAULT_PRICE_FORMATTER } from "~utils/system"
 
   export let popupProductName = ""
   export let popupPrices: PopupPrices = getDefaultPopupPrices()

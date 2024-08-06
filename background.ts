@@ -20,7 +20,7 @@ const updateActiveTab = () => {
     }
   }
 
-  let gettingActiveTab = browser.tabs.query({
+  const gettingActiveTab = browser.tabs.query({
     active: true,
     currentWindow: true,
   });

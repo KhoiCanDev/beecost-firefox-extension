@@ -1,7 +1,7 @@
 {
   "name": "beecost-firefox-extension",
   "displayName": "BeeCost (Unofficial)",
-  "version": "3.2.5",
+  "version": "3.2.6",
   "description": "Check product prices history on Vietnamese e-commerce sites",
   "author": "KhoiCanDev <khoi.le.nt.1001@gmail.com>",
   "scripts": {

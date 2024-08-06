@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { DEFAULT_PRICE_FORMATTER } from "~util/system"
+  import { DEFAULT_PRICE_FORMATTER } from "~utils/system"
 
   export let priceHistoryRecords = []
 </script>
