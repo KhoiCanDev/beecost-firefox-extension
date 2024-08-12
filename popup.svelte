@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { fetch as crossFetch } from "cross-fetch"
-  import { default as fetchr } from "fetch-retry"
   import type { IChartApi, SingleValueData } from "lightweight-charts"
+  import type { ApiResponse } from "~model/apiResponse"
 
   import { type PopupPrices, getDefaultPopupPrices } from "~model/popup-prices"
   import { PopupState } from "~model/popup-state"
   import { PriceStatus } from "~model/price-status"
+  import type { Product, ProductBase } from "~model/product"
+  import type { ProductPrices } from "~model/productPrices"
+  import { apiClient, buildGetProductPricesUrl, buildGetProductUrl } from "~utils/api"
   import { convertToChartData } from "~utils/chart"
   import { findMedian, findMin, findMinMax } from "~utils/math"
   import LoadingView from "~views/loading-view.svelte"
@@ -14,12 +16,6 @@
   import RequestPermissionsView from "~views/request-permissions-view.svelte"
 
   const allowedHosts = ["shopee.vn", "tiki.vn", "www.lazada.vn"]
-  const retryableFetch = fetchr(crossFetch)
-  const fetchRetryOption = {
-    retries: 5,
-    retryDelay: 800,
-    retryOn: [503, 504]
-  }
 
   let currentTabUrl = ""
   let currentPopupState: PopupState = PopupState.Loading
@@ -63,33 +59,27 @@
   }
 
   const loadProductData = async () => {
-    const urlSrc = `https://apiv3.beecost.vn/search/product?product_url=${encodeURIComponent(
-      currentTabUrl
-    )}`
-    const response = await retryableFetch(urlSrc, fetchRetryOption)
+    const response = await apiClient.get(buildGetProductUrl(currentTabUrl))
 
     if (!response.ok) {
       currentPopupState = PopupState.NoData
       return
     }
 
-    var data = await response.json()
-    loadProductPage(data)
-  }
-
-  const loadProductPage = async (product) => {
-    if (product.status === "error") {
+    var apiResponse = await response.json<ApiResponse<Product>>()
+    if (apiResponse.status === "error") {
       currentPopupState = PopupState.NoData
       return
     }
+    loadProductPage(apiResponse.data)
+  }
 
+  const loadProductPage = async (product: Product) => {
     const {
-      data: {
-        product_base: {
-          product_base_id: productId,
-          price: productPrice,
-          name: productName
-        }
+      product_base: {
+        product_base_id: productId,
+        price: productPrice,
+        name: productName
       }
     } = product
 
@@ -98,13 +88,8 @@
       return
     }
 
-    const priceHistoryApi = `https://apiv3.beecost.vn/product/history_price?product_base_id=${productId}&price_current=${productPrice}`
-
-    const priceHistoryResponse = await retryableFetch(
-      priceHistoryApi,
-      fetchRetryOption
-    )
-    const priceHistoryJson = await priceHistoryResponse.json()
+    const apiResponse = await apiClient.get(buildGetProductPricesUrl(productId, productPrice))
+    const priceHistoryJson = await apiResponse.json<ApiResponse<ProductPrices>>()
 
     const {
       data: {
