@@ -21,7 +21,7 @@
   },
   "devDependencies": {
     "@plasmohq/prettier-plugin-sort-imports": "4.0.1",
-    "@types/chrome": "0.0.268",
+    "@types/chrome": "0.0.270",
     "@types/firefox-webext-browser": "^120.0.3",
     "@types/node": "22.1.0",
     "autoprefixer": "^10.4.19",
