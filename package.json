@@ -24,7 +24,7 @@
     "@types/chrome": "0.0.268",
     "@types/firefox-webext-browser": "^120.0.3",
     "@types/node": "22.1.0",
-    "autoprefixer": "^10.4.19",
+    "autoprefixer": "^10.4.20",
     "postcss": "^8.4.38",
     "prettier": "3.3.3",
     "svelte-bootstrap-icons": "^3.1.1",
